@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_DB: ${DATABASE_NAME}
+    ports:
+      - 5433:5432
+    container_name: alpha_db
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    entrypoint: ['/bin/bash', './entrypoint.sh']
+    ports:
+      - '3000:3000'
+    env_file:
+      - .env
+    depends_on:
+      - db
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      DATABASE_PORT: ${DATABASE_PORT}
+      DIALECT: ${DIALECT}
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - '8080:80'
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    depends_on:
+      - db
+    volumes:
+      - ./.env:/root/.env
+    command: ['/startup.sh']
+
+  api_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3001:3000'
+    volumes:
+      - .:/src
+    environment:
+      - AWS_SDK_LOAD_CONFIG=1
+    working_dir: /src
+
+volumes:
+  postgres-data:

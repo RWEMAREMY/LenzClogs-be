@@ -1,0 +1,3013 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "ATLP Project API",
+    "version": "1.0.0",
+    "description": "APIs retrieving"
+  },
+  "servers": [
+    {
+      "url": "https://alpha-ec-be-1-h8kj.onrender.com",
+      "description": "production server server"
+    },
+    {
+      "url": "http://localhost:3000",
+      "description": "Development server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "token": {
+        "type": "apiKey",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  },
+  "paths": {
+    "/api/users/login": {
+      "post": {
+        "tags": ["users"],
+        "summary": "Sign in to the application",
+        "description": "Only registered user can login to the account.User must login by using email and password",
+        "requestBody": {
+          "description": "user body details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "ruthuwamahoro250@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "Password2@"
+                  }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    },
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/verify/{token}": {
+      "post": {
+        "tags": ["users"],
+        "summary": "Verify OTP for the seller",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "description": "OTP Token",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "otp": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Login Successful" },
+          "401": { "description": "Wrong OTP entered" },
+          "404": { "description": "Invalid token" }
+        }
+      }
+    },
+    "/api/users/logout": {
+      "post": {
+        "tags": ["users"],
+        "summary": "Sign out of the application",
+        "description": "Only logged-in users can log out of the account. User must log out by using a Bearer token in the 'Authorization' header.",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    },
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users": {
+      "get": {
+        "tags": ["users"],
+        "summary": "get all users",
+        "description": "it should list all users",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {}
+                    }
+                  }
+                },
+                "example": {
+                  "status": "success",
+                  "data": []
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/sellers": {
+      "get": {
+        "tags": ["users"],
+        "summary": "get all sellers",
+        "description": "it should list all sellers",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {}
+                    }
+                  }
+                },
+                "example": {
+                  "status": "success",
+                  "data": []
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/profile": {
+      "patch": {
+        "tags": ["users"],
+        "summary": "Updating user profile",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "required": false,
+                    "default": ""
+                  },
+                  "email": {
+                    "type": "string",
+                    "required": false,
+                    "default": ""
+                  },
+                  "phone": {
+                    "type": "string",
+                    "required": false,
+                    "default": ""
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "user Image",
+                    "required": false
+                  },
+                  "birthdate": {
+                    "type": "string",
+                    "required": false,
+                    "default": ""
+                  },
+                  "gender": {
+                    "type": "string",
+                    "required": false,
+                    "default": ""
+                  },
+                  "address": {
+                    "type": "string",
+                    "required": false,
+                    "default": ""
+                  },
+                  "preferedcurrency": {
+                    "type": "string",
+                    "required": false,
+                    "default": ""
+                  },
+                  "preferedlanguage": {
+                    "type": "string",
+                    "required": false,
+                    "default": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["users"],
+        "summary": "get user profile",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/roles": {
+      "post": {
+        "tags": ["Role"],
+        "summary": "create role",
+        "description": "only admin can be able to assign role and create role",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "requestBody": {
+          "description": "role body details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "guest"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "guest role"
+                  }
+                },
+                "required": ["name", "description"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Role"],
+        "summary": "List all users",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {}
+                    }
+                  }
+                },
+                "example": {
+                  "status": "success",
+                  "data": []
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/notifications": {
+      "get": {
+        "tags": ["notifications"],
+        "summary": "get notification",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {}
+                    }
+                  }
+                },
+                "example": {
+                  "status": "success",
+                  "data": []
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/notifications/markall": {
+      "patch": {
+        "tags": ["notifications"],
+        "summary": "Mark all Notifications as read",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    },
+                    "data": {
+                      "type": "string",
+                      "example": "ok"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "All notifications marked as read."
+                    }
+                  }
+                },
+                "example": {
+                  "status": "Success!",
+                  "data": [
+                    {
+                      "id": "7668a20f-6661-460c-b7ab-3c2a3fd2e297",
+                      "message": "John, your product order has been rejected!!",
+                      "isRead": true,
+                      "event": "ORDER_STATUS",
+                      "createdAt": "2024-07-07T22:18:54.877Z"
+                    },
+                    {
+                      "id": "77bf27f7-5908-4ebf-ad6c-c8fe8e92cce9",
+                      "message": "John added the product to their wishlist(shoes)",
+                      "isRead": true,
+                      "event": "PRODUCT_WISHLIST_UPDATE",
+                      "createdAt": "2024-07-07T00:20:57.291Z"
+                    }
+                  ],
+                  "message": "Notification marked as read."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/notifications/{id}": {
+      "patch": {
+        "tags": ["notifications"],
+        "summary": "update read status of notification",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id of the notification",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    },
+                    "data": {
+                      "type": "string",
+                      "example": "ok"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Notification marked as read."
+                    }
+                  }
+                },
+                "example": {
+                  "status": "Success!",
+                  "data": null,
+                  "message": "Notification marked as read."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/wishes": {
+      "post": {
+        "tags": ["wishlist"],
+        "summary": "add wishes",
+        "description": "only buyer can be able to post wishes",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "requestBody": {
+          "description": "wishes body details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "productId": {
+                    "type": "string",
+                    "example": "3c34c7cc-443c-4f9a-abcf-2749bfc18f3c"
+                  }
+                },
+                "required": ["productId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["wishlist"],
+        "summary": "List all wishes",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {}
+                    }
+                  }
+                },
+                "example": {
+                  "status": "success",
+                  "data": []
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["wishlist"],
+        "summary": " all wishes",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {}
+                    }
+                  }
+                },
+                "example": {
+                  "status": "success",
+                  "data": []
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/roles/{id}": {
+      "get": {
+        "tags": ["Role"],
+        "description": "Get role by id",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id of the role",
+            "schema": {
+              "type": "string",
+              "example": "63caaf3527b29e1d399896da"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {}
+                    }
+                  }
+                },
+                "example": {
+                  "status": "success",
+                  "data": []
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Role"],
+        "description": "Delete the role by id",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id of the role",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {}
+                    }
+                  }
+                },
+                "example": {
+                  "status": "success",
+                  "data": []
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Role"],
+        "description": "Update a Role",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id of the role",
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "name"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "name"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "type": "object",
+                "example": {
+                  "status": "success",
+                  "data": []
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/roles": {
+      "post": {
+        "tags": ["Role"],
+        "summary": "assign role to user",
+        "description": "only admin can be able to assign role ",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "requestBody": {
+          "description": "role body details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "string",
+                    "example": "3c34c7cc-443c-4f9a-abcf-2749bfc18f3c"
+                  },
+                  "roleId": {
+                    "type": "string",
+                    "example": "d290f1ee-6c54-4b01-90e6-d701748f0853"
+                  }
+                },
+                "required": ["userId", "roleId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/register": {
+      "post": {
+        "tags": ["users"],
+        "summary": "Create a user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "email": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "phone": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "address": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "password": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "status": "Success!",
+                  "data": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWU1ZGVhZjcxZjhjMDBlNjZlNWUyMDYiLCJpYXQiOjE3MDk2NjU3MjIsImV4cCI6MTcwOTY3MjkyMn0.JTjNO1wa0UjBmSDlcbQYM8R_4DG8BCQ9JpR9E-bATxM",
+                  "message": "User created successfully!"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/google-auth": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Initiate Google authentication",
+        "description": "This endpoint redirects the user to Google's authentication page.",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Redirects to Google's authentication page"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/users/google-auth/callback": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Handle Google authentication callback",
+        "description": "This endpoint handles the callback from Google after the user has authenticated.",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "User authenticated successfully, returns user information and token",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "googleId": {
+                      "type": "string"
+                    },
+                    "photoUrl": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "verified": {
+                      "type": "boolean"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                },
+                "token": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User not found or authentication failed"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/users/forgot-password": {
+      "post": {
+        "tags": ["users"],
+        "summary": "forgot Password",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "status": "Success!",
+                  "data": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OTkxYmQyLTEyODYtNGUxMC05MTU3LTFjMjc4ZTE3YTI2MSIsImlhdCI6MTcxMjUwOTUxNiwiZXhwIjoxNzEyNTEwMTE2fQ.loCU1X1No7hfIHk56dQMSU9zKQA_2jZUK-BRM3BHQjU",
+                  "message": "Password reset link sent successfully!"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/reset-password/{token}": {
+      "patch": {
+        "tags": ["users"],
+        "summary": "Reset Password",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "description": "Token for password reset",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "confirmPassword": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "status": "Success!",
+                  "data": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OTkxYmQyLTEyODYtNGUxMC05MTU3LTFjMjc4ZTE3YTI2MSIsImlhdCI6MTcxMjUwOTUxNiwiZXhwIjoxNzEyNTEwMTE2fQ.loCU1X1No7hfIHk56dQMSU9zKQA_2jZUK-BRM3BHQjU",
+                  "message": "Password reset and Logged in successfully"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/change-password": {
+      "post": {
+        "tags": ["users"],
+        "summary": "Update password",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "oldPassword": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "confirmPassword": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "status": "Success!",
+                  "data": "test3@example.com",
+                  "message": "Password changed successfully"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/categories": {
+      "post": {
+        "tags": ["Category"],
+        "summary": "create category",
+        "description": "only sellet can be able to create category",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "requestBody": {
+          "description": "Category body details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Clothers"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Clothers"
+                  }
+                },
+                "required": ["name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Category"],
+        "summary": "List all categories",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {}
+                    }
+                  }
+                },
+                "example": {
+                  "status": "success",
+                  "data": [],
+                  "message": "Categories fetched successfully!"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/categories/{id}": {
+      "delete": {
+        "tags": ["Category"],
+        "description": "Delete the category by id",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id of the category",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {}
+                    }
+                  }
+                },
+                "example": {
+                  "status": "success",
+                  "data": []
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Category"],
+        "description": "Update the category by id",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id of the category",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Category body details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Clothers"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Clothers"
+                  }
+                },
+                "required": ["name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {}
+                    }
+                  }
+                },
+                "example": {
+                  "status": "success",
+                  "data": [],
+                  "message": "Category updated successfully!"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/products": {
+      "post": {
+        "tags": ["Products"],
+        "summary": "Create a Product",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "required": true,
+                    "default": ""
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "The images of the product"
+                  },
+                  "price": {
+                    "type": "number",
+                    "required": true,
+                    "default": ""
+                  },
+                  "quantity": {
+                    "type": "number",
+                    "required": false
+                  },
+                  "categoryId": {
+                    "type": "number",
+                    "required": true,
+                    "description": "Cars: 2d854884-ea82-468f-9883-c86ce8d5a001, Shoes: 2d854884-ea82-468f-9883-c86ce8d5a002, Electronics: 2d854884-ea82-468f-9883-c86ce8d5a003"
+                  },
+                  "expiryDate": {
+                    "type": "string",
+                    "required": false,
+                    "default": ""
+                  },
+                  "description": {
+                    "type": "string",
+                    "required": false,
+                    "default": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "status": "Success!",
+                  "data": {},
+                  "message": "Product created successfully!"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Products"],
+        "summary": "Get all Product",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The page number to retrieve.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The number of items per page.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "search by roduct name",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sellerId",
+            "in": "query",
+            "description": "search by ID of the seller.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "categoryId",
+            "in": "query",
+            "description": "search by category of the products.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "The sorting order of the products. Format: field:direction. Example: price:asc.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "priceLessThan",
+            "in": "query",
+            "description": "Search by price less than.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "priceGreaterThan",
+            "in": "query",
+            "description": "Search by price greater than.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "status": "Success!",
+                  "data": {
+                    "totalItems": 4,
+                    "Products": [],
+                    "totalPages": 2,
+                    "from": 0,
+                    "to": 3
+                  },
+                  "message": "successfully!"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/carts": {
+      "post": {
+        "tags": ["carts"],
+        "summary": "Add a new cart",
+        "description": "Add a new cart to the database",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "productId": {
+                    "type": "string",
+                    "example": "e933f4c2-b10b-494a-8b57-7185e928b8a6"
+                  },
+                  "quantity": {
+                    "type": "string",
+                    "example": "4"
+                  }
+                },
+                "required": ["productId", "quantity"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cart added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "productId": {
+                      "type": "string",
+                      "example": "ghd45fvg78vhgf890977"
+                    },
+                    "quantity": {
+                      "type": "string",
+                      "example": "4"
+                    }
+                  },
+                  "required": ["name"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error!"
+                    },
+                    "data": {
+                      "type": "string",
+                      "example": "null"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Cannot read properties of null (reading 'quantity')"
+                    }
+                  },
+                  "required": ["name"]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["carts"],
+        "summary": "Get all carts",
+        "description": "Get all carts from the database",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Carts retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Cart"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/carts/{id}": {
+      "patch": {
+        "tags": ["carts"],
+        "summary": "Update a cart",
+        "description": "Update a cart in the database",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id of the cart",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "productId": {
+                  "type": "string",
+                  "example": "e933f4c2-b10b-494a-8b57-7185e928b8a6"
+                },
+                "quantity": {
+                  "type": "string",
+                  "example": "4"
+                }
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Cart"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cart updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Cart"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["carts"],
+        "summary": "Delete a cart",
+        "description": "Delete a cart from the database",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id of the cart",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cart deleted successfully"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "put": {
+        "tags": ["carts"],
+        "summary": "Empty a cart",
+        "description": "Empty a cart from the database",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id of the cart",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cart emptied successfully"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/carts/products/{id}": {
+      "delete": {
+        "tags": ["carts"],
+        "summary": "Delete a product from the cart",
+        "description": "single product to be deleted from cart",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id of the product",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    },
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/products/{id}": {
+      "get": {
+        "tags": ["Products"],
+        "summary": "Get a Product",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the product to retrieve."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "status": "Success!",
+                  "data": {
+                    "id": "3764f889-b2d7-44bf-8bd1-35c80b61dc8d",
+                    "name": "Toyota",
+                    "slug": "Toyota",
+                    "images": [
+                      "https://res.cloudinary.com/dn8vyfgnl/image/upload/v1712421646/a5mpdlll7subatkekkpg.webp",
+                      "https://res.cloudinary.com/dn8vyfgnl/image/upload/v1712421647/mwlwva0knlbqmodaeep5.jpg",
+                      "https://res.cloudinary.com/dn8vyfgnl/image/upload/v1712421647/kq02mwxjybjj6wxwbq9w.png",
+                      "https://res.cloudinary.com/dn8vyfgnl/image/upload/v1712421648/zwl3pgmbyy6eaqratuz9.png"
+                    ],
+                    "price": 5000,
+                    "expiryDate": null,
+                    "bonus": null,
+                    "status": "available",
+                    "quantity": 0,
+                    "sellerId": "3a75ff63-736e-4f7b-9d98-26dd10f4d0c6",
+                    "createdAt": "2024-04-06T16:40:49.098Z",
+                    "updatedAt": "2024-04-06T16:40:49.098Z"
+                  },
+                  "message": "Product created successfully!"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Products"],
+        "summary": "Update a Product",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the product to retrieve."
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "required": false,
+                    "default": ""
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "required": false,
+                    "description": "The images of the product",
+                    "default": []
+                  },
+                  "categoryId": {
+                    "type": "string",
+                    "required": false,
+                    "default": ""
+                  },
+                  "price": {
+                    "type": "number",
+                    "required": false,
+                    "default": 0
+                  },
+                  "quantity": {
+                    "type": "number",
+                    "required": false
+                  },
+                  "bonus": {
+                    "type": "number",
+                    "required": false,
+                    "default": ""
+                  },
+                  "status": {
+                    "type": "string",
+                    "required": false,
+                    "default": ""
+                  },
+                  "expiryDate": {
+                    "type": "string",
+                    "required": false,
+                    "default": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "status": "Success!",
+                  "data": {
+                    "id": "3764f889-b2d7-44bf-8bd1-35c80b61dc8d",
+                    "name": "Toyota",
+                    "slug": "Toyota",
+                    "images": [
+                      "https://res.cloudinary.com/dn8vyfgnl/image/upload/v1712421646/a5mpdlll7subatkekkpg.webp",
+                      "https://res.cloudinary.com/dn8vyfgnl/image/upload/v1712421647/mwlwva0knlbqmodaeep5.jpg",
+                      "https://res.cloudinary.com/dn8vyfgnl/image/upload/v1712421647/kq02mwxjybjj6wxwbq9w.png",
+                      "https://res.cloudinary.com/dn8vyfgnl/image/upload/v1712421648/zwl3pgmbyy6eaqratuz9.png"
+                    ],
+                    "price": 5000,
+                    "expiryDate": null,
+                    "bonus": null,
+                    "status": "available",
+                    "quantity": 0,
+                    "sellerId": "3a75ff63-736e-4f7b-9d98-26dd10f4d0c6",
+                    "createdAt": "2024-04-06T16:40:49.098Z",
+                    "updatedAt": "2024-04-06T16:40:49.098Z"
+                  },
+                  "message": "Product updated successfully!"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Products"],
+        "summary": "Get a Product",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the product to retrieve."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "null"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "status": "Success!",
+                  "data": null,
+                  "message": "Product deleted successfully!"
+                }
+              }
+            }
+          }
+        },
+        "/api/users/update": {
+          "patch": {
+            "tags": ["users"],
+            "summary": "Update  profile",
+            "security": [
+              {
+                "BearerAuth": []
+              }
+            ],
+            "requestBody": {
+              "required": true,
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            },
+            "responses": {
+              "200": {
+                "description": "OK",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string"
+                        },
+                        "data": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "example": {
+                      "status": "Success!",
+                      "data": "Profile updated successfully!",
+                      "message": "Profile updated successfully!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "components": {
+            "schemas": {
+              "User": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the user."
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "The email address of the user."
+                  },
+                  "phone": {
+                    "type": "string",
+                    "description": "The phone number of the user."
+                  },
+                  "address": {
+                    "type": "string",
+                    "description": "The address of the user."
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "The password of the user."
+                  }
+                },
+                "required": ["name", "email", "phone", "address", "password"]
+              }
+            }
+          }
+        }
+      },
+      "components": {
+        "securitySchemes": {
+          "BearerAuth": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT"
+          }
+        },
+        "schemas": {
+          "User": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "The name of the user."
+              },
+              "phone": {
+                "type": "string",
+                "description": "The phone number of the user."
+              },
+              "image": {
+                "type": "string",
+                "description": "image of the user."
+              },
+              "gender": {
+                "type": "string",
+                "description": "gender of the user."
+              },
+              "preferedcurrency": {
+                "type": "string",
+                "description": "gender of the user."
+              },
+              "preferedlanguage": {
+                "type": "string",
+                "description": "gender of the user."
+              },
+              "address": {
+                "type": "string",
+                "description": "The address of the user."
+              }
+            },
+            "required": ["name", "email", "image", "address", "password"]
+          }
+        }
+      }
+    },
+    "/api/ads": {
+      "get": {
+        "tags": ["Fake ads"],
+        "summary": "Get Product Ads",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The page number to retrieve.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "search by roduct name",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "categoryId",
+            "in": "query",
+            "description": "search by category of the products.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "status": "Success!",
+                  "data": [],
+                  "message": "Ads retrieved successfully!"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/verify-email/{token}": {
+      "get": {
+        "tags": ["users"],
+        "summary": "Verify account using email",
+        "description": "Verify user's email using a verification token",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "description": "The verification token sent to the user's email",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Email verified successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "data": {
+                      "example": ""
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Email verified successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or expired token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "data": {
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid or expired token"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "jwt malformed"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/{id}/account-status": {
+      "post": {
+        "tags": ["users"],
+        "summary": "Disable and Activate an account",
+        "description": "Disable and Activate an account",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id of the user",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "properties": [],
+                "example": [
+                  "Repeated violation of terms of service",
+                  "Not following usage policies",
+                  " Harrassment"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The user's account status has been successfully updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Status has been updated to SUSPENDED"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/products/{id}/status": {
+      "patch": {
+        "tags": ["Products"],
+        "summary": "Update availability of a Product",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the product to retrieve."
+          }
+        ],
+        "requestBody": {},
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "status": "Success!",
+                  "message": "Product updated successfully!"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stats": {
+      "get": {
+        "tags": ["Products"],
+        "summary": "Fetch product statistics",
+        "description": "Fetches various statistics about products, such as new products added, products expired, stock reduction/increment, and number of products wished. Only sellers can access this endpoint.",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "description": "Start date",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2024-05-01"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "description": "End date ",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2024-05-14"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "status": "Success!",
+                  "data": {
+                    "stats": {
+                      "newProducts": 0,
+                      "expiredProducts": 0,
+                      "stockIncrement": 0,
+                      "stockReduction": 0,
+                      "productWished": 0
+                    }
+                  },
+                  "message": "Statistics are fetched successfully"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reviews": {
+      "post": {
+        "tags": ["Review"],
+        "summary": "Add a review",
+        "description": "Logged-in users can add a review for a specific product.",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["productId", "rating"],
+                "properties": {
+                  "productId": {
+                    "type": "string",
+                    "description": "ID of the product associated with the review."
+                  },
+                  "rating": {
+                    "type": "number",
+                    "description": "Rating for the product [1-5].",
+                    "minimum": 1,
+                    "maximum": 5
+                  },
+                  "feedback": {
+                    "type": "string",
+                    "description": "Feedback text for the product (optional)."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Review added successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success!"
+                    },
+                    "data": {
+                      "type": "object"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Review added successfully!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Review"],
+        "summary": "List all reviews",
+        "description": "Retrieve a list of all reviews for a specific product.",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "query",
+            "description": "Product ID to filter reviews.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved reviews.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Reviews retrieved successfully!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reviews/{reviewId}": {
+      "delete": {
+        "tags": ["Review"],
+        "summary": "delete a review",
+        "description": "logged in user can delete his/her review",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Add the reviewId."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "status": "success",
+                    "data": null,
+                    "message": "Review deleted successfully!"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reviews/{reviewId}/replies": {
+      "post": {
+        "tags": ["Review"],
+        "summary": "Reply a review",
+        "description": "logged in user can reply a review",
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Add the reviewId to reply."
+          }
+        ],
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "feedback": {
+                    "type": "string",
+                    "description": "Add feedback text",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "status": "success",
+                    "data": {},
+                    "message": "Reply added successfully!"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Review"],
+        "summary": "get all replies",
+        "description": "Anyone can get all the replies",
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Add the reviewId to get replies."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "status": "success",
+                    "data": [],
+                    "message": "Replies retrieved successfully!"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reviews/{reviewId}/replies/{replyId}": {
+      "delete": {
+        "tags": ["Review"],
+        "summary": "delete a reply",
+        "description": "logged in user can delete his/her reply",
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Add the reviewId."
+          },
+          {
+            "name": "replyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Add the replyId to delete."
+          }
+        ],
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "status": "success",
+                    "data": null,
+                    "message": "Reply deleted successfully!"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/payment": {
+      "post": {
+        "tags": ["Payments"],
+        "summary": "Pay using Stripe",
+        "description": "Pay using Stripe",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The order is created successfully , then need to use url to complete payment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "url"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/product-orders": {
+      "get": {
+        "tags": ["Order"],
+        "summary": "List all orders",
+        "description": "Retrieve a list of all orders for a specific user.",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/product-orders/{id}/status": {
+      "put": {
+        "tags": ["Order"],
+        "summary": "update order status",
+        "description": "logged in user can update his/her order status",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Add the product-order id"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "example": "accepted"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/orders": {
+      "get": {
+        "tags": ["Order"],
+        "summary": "get all orders",
+        "description": "Anyone can get all the orders",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
