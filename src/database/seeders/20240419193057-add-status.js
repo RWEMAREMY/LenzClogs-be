@@ -9,8 +9,8 @@ module.exports = {
         id: uuidv4(),
         name: 'Barack Obama',
         password:
-          '$2b$10$sb4BI38bZVJkFBmB2ux1fuugVibzD9s0hpQ4cVZcAXPUVbjgCdC6m',
-        email: 'test9@example.com',
+          '$2b$10$ghcxUhRfRVHvEOtt16Vj7OcANFjXAr2atOjaPzw1ENZFzGpCe7Xdu',
+        email: 'test02@example.com',
         phone: '0783556915',
         verified: true,
         status: false,
