@@ -18,8 +18,8 @@ const up = async queryInterface => {
     [
       {
         id: '2d854884-ea82-468f-9883-c86ce8d5a001',
-        name: 'Cars',
-        description: 'Cars',
+        name: 'Clothers',
+        description: 'Clothers',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -32,8 +32,8 @@ const up = async queryInterface => {
       },
       {
         id: '2d854884-ea82-468f-9883-c86ce8d5a003',
-        name: 'Electronics',
-        description: 'Electronics',
+        name: 'Accessories',
+        description: 'Accessories',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
