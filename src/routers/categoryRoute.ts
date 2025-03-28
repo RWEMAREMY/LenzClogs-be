@@ -1,5 +1,10 @@
 import { Router } from 'express';
-import { isAuthenticated, isSeller, validationMiddleware } from '../middleware';
+import {
+  isAuthenticated,
+  isAdmin,
+  isSeller,
+  validationMiddleware,
+} from '../middleware';
 import {
   createCategory,
   deleteCategory,
@@ -13,14 +18,14 @@ const router = Router();
 router.post(
   '/categories',
   isAuthenticated,
-  isSeller,
+  isAdmin,
   validationMiddleware(categoryValidationSchema),
   createCategory
 );
 
 router.get('/categories', getCategories);
 
-router.delete('/categories/:id', isAuthenticated, isSeller, deleteCategory);
+router.delete('/categories/:id', isAuthenticated, isAdmin, deleteCategory);
 
 router.put(
   '/categories/:id',
